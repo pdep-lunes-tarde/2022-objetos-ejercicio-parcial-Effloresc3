@@ -25,6 +25,7 @@ class Soldado {
 	}
 
 	method herramientas() {
+		return []
 	}
 
 }
@@ -44,6 +45,7 @@ object mucama {
 	}
 
 	method herramientas() {
+		return []
 	}
 
 }
@@ -55,15 +57,18 @@ class Empleado {
 	var property rol
 
 	method stamina(nuevaStamina) {
-		nuevaStamina.max(raza.maxstamina())
+		nuevaStamina.min(raza.maxstamina())
 	}
 
 	method stamina() {
-		return stamina.max(raza.maxstamina())
+		return stamina.min(raza.maxstamina())
 	}
 
 	method herramientas() {
 		return rol.herramientas()
+	}
+	method usarArma(){
+		rol.usarArma()
 	}
 
 	method fuerza() {
@@ -84,12 +89,12 @@ object arreglarMaquina {
 	method dificultad() = complejidad * 2
 
 	method cumpleRequerimientos(empleado) {
-		return empleado.stamina() >= complejidad && empleado.herramientas().contains(self.herramientasNecesarias())
+		return empleado.stamina() >= complejidad && herramientasNecesarias.all({herramienta => empleado.herramientas().contains(herramienta)})
 	}
 
 	method realizarTarea(empleado) {
 		if (self.cumpleRequerimientos(empleado)) {
-			empleado.stamina(empleado.stamina() - self.complejidad())
+			empleado.stamina(empleado.stamina() - complejidad)
 		} else {
 			self.error("No puede realizar la tarea")
 		}
@@ -102,20 +107,21 @@ object defenderSector {
 	var property amenaza
 
 	method cumpleRequerimientos(empleado) {
-		return empleado.rol() != mucama && empleado.fuerza() >= self.amenaza()
+		return empleado.rol() != mucama && empleado.fuerza() >= amenaza
 	}
 
 	method dificultad(empleado) {
 		if (empleado.raza() == biclope) {
-			return self.amenaza()
+			return amenaza
 		} else {
-			return self.amenaza() * 2
+			return amenaza * 2
 		}
 	}
 
 	method realizarTarea(empleado) {
-		if (self.cumpleRequerimientos(empleado) ) {
+		if (self.cumpleRequerimientos(empleado)) {
 			empleado.stamina(empleado.stamina() / 2)
+			empleado.usarArma()
 		}
 	}
 
@@ -133,11 +139,9 @@ object limpiarSector {
 	}
 
 	method cumpleRequerimientos(empleado) {
-		if (empleado.stamina() > self.staminaRequerida() || empleado.rol() == mucama) {
-			return true
-		} else {
-			return false
-		}
+		return empleado.stamina() > self.staminaRequerida() || empleado.rol() == mucama
 	}
 
 }
+
+
