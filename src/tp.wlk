@@ -20,10 +20,7 @@ class Soldado {
 		dano += 2
 	}
 
-	method cambiarRol() {
-		dano = 0
-	}
-
+	
 	method herramientas() {
 		return []
 	}
