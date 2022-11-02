@@ -138,7 +138,12 @@ object limpiarSector {
 	method cumpleRequerimientos(empleado) {
 		return empleado.stamina() > self.staminaRequerida() || empleado.rol() == mucama
 	}
-
+	
+	method realizarTarea(empleado) {
+		if (self.cumpleRequerimientos(empleado)) {
+			empleado.stamina(empleado.stamina() - self.staminaRequerida())
+		}
+	}
 }
 
 
